@@ -96,7 +96,7 @@ public class Chassis extends Subsystem
 		twist = twist * twist * twist;
 
 		// Square forward/backward to decrease sensitivity
-		double moveValue = -stick.getY(); // negate y, stick forward is negative
+		double moveValue = stick.getY();
 		if (moveValue < 0) {
 			// remember to preserve direction, it is lost when squaring
 			moveValue = -1.0 * (moveValue * moveValue);
@@ -142,6 +142,8 @@ public class Chassis extends Subsystem
 		reset();
 
 		angleGyroPID.setPID(P, I, D);
+		
+		angleGyroPID.setSetpoint(getCurrentHeading());
 
 		// Limit the output power when turning
 		angleGyroPID.setOutputRange(minimumOutput, maximumOutput);
@@ -192,7 +194,8 @@ public class Chassis extends Subsystem
 		public void pidWrite(double PIDoutput)
 		{
 			// Drive the robot given the speed and direction
-			robotDrive.arcadeDrive(m_magnitude, PIDoutput, false);
+			// Note: The Arcade drive expects a joystick which is negative forward
+			robotDrive.arcadeDrive(-m_magnitude, PIDoutput, false);
 		}
 	}
 
