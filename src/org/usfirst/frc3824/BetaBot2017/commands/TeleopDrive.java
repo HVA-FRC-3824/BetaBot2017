@@ -38,7 +38,7 @@ public class TeleopDrive extends Command
 	// Called just before this Command runs the first time
 	protected void initialize()
 	{
-		Robot.chassis.stop();		
+		Robot.chassis.reset();		
 	}
 
 	// Called repeatedly when this Command is scheduled to run
@@ -57,7 +57,7 @@ public class TeleopDrive extends Command
 	// Called once after isFinished returns true
 	protected void end()
 	{
-		Robot.chassis.stop();		
+		Robot.chassis.reset();		
 	}
 
 	// Called when another command which requires one or more of the same
