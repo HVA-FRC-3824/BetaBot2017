@@ -14,6 +14,9 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import org.usfirst.frc3824.BetaBot2017.Robot;
 import org.usfirst.frc3824.BetaBot2017.commands.*;
 import org.usfirst.frc3824.BetaBot2017.subsystems.*;
 
@@ -26,7 +29,6 @@ import org.usfirst.frc3824.BetaBot2017.subsystems.*;
  */
 public class Robot extends IterativeRobot
 {
-
 	Command					autonomousCommand;
 
 	public static OI		oi;
@@ -74,6 +76,9 @@ public class Robot extends IterativeRobot
 	public void disabledPeriodic()
 	{
 		Scheduler.getInstance().run();
+		
+		double distance = Robot.chassis.getDistanceFromUltrasonicSensor();
+		SmartDashboard.putNumber("Distance",distance);	
 	}
 
 	public void autonomousInit()
@@ -107,6 +112,9 @@ public class Robot extends IterativeRobot
 	public void teleopPeriodic()
 	{
 		Scheduler.getInstance().run();
+		
+		double distance = Robot.chassis.getDistanceFromUltrasonicSensor();
+		SmartDashboard.putNumber("Distance",distance);	
 	}
 
 	/*
