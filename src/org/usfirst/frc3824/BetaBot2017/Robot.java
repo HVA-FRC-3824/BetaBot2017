@@ -77,8 +77,8 @@ public class Robot extends IterativeRobot
 	{
 		Scheduler.getInstance().run();
 		
-		double distance = Robot.chassis.getDistanceFromUltrasonicSensor();
-		SmartDashboard.putNumber("Distance",distance);	
+		double distance = Robot.chassis.getUltrasonicDistance();
+		SmartDashboard.putNumber("Distance", distance);	
 	}
 
 	public void autonomousInit()
@@ -113,8 +113,8 @@ public class Robot extends IterativeRobot
 	{
 		Scheduler.getInstance().run();
 		
-		double distance = Robot.chassis.getDistanceFromUltrasonicSensor();
-		SmartDashboard.putNumber("Distance",distance);	
+		double distance = Robot.chassis.getUltrasonicDistance();
+		SmartDashboard.putNumber("Distance", distance);	
 	}
 
 	/*
