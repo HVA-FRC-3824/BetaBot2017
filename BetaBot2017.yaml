@@ -382,6 +382,31 @@ Children:
         name: Button on SmartDashboard, validators: null, value: true}
     Base: Command
     Name: Chassis Drive Distance
+  - Children: []
+    Properties:
+      Parameters: !!robotbuilder.data.properties.ParametersProperty
+        default: []
+        name: Parameters
+        validators: null
+        value:
+        - !!robotbuilder.data.properties.ParameterDescriptor {name: TurnDegrees, type: double}
+        - !!robotbuilder.data.properties.ParameterDescriptor {name: DrivePower, type: double}
+      Requires: !!robotbuilder.data.properties.TypeSelectionProperty {default: None,
+        name: Requires, type: Subsystem, validators: null, value: Chassis}
+      Parameter presets: !!robotbuilder.data.properties.ParameterSetProperty
+        default: &id012
+        - !!robotbuilder.data.properties.ParameterSet
+          name: Right
+          parameters:
+          - {name: TurnDegrees, type: double, value: '90'}
+          - {name: DrivePower, type: double, value: '0.5'}
+        name: Parameter presets
+        validators: null
+        value: *id012
+      Button on SmartDashboard: !!robotbuilder.data.properties.BooleanProperty {default: true,
+        name: Button on SmartDashboard, validators: null, value: true}
+    Base: Command
+    Name: Chassis Turn Angle
   Properties: {}
   Base: Commands
   Name: Commands
