@@ -374,10 +374,10 @@ Children:
         validators: null
         value:
         - !!robotbuilder.data.properties.ParameterSet
-          name: Two Meters
+          name: FiveFeet
           parameters:
-          - {name: Distance, type: double, value: '200.0'}
-          - {name: Power, type: double, value: '1.0'}
+          - {name: Distance, type: double, value: '60.0'}
+          - {name: Power, type: double, value: '0.75'}
       Button on SmartDashboard: !!robotbuilder.data.properties.BooleanProperty {default: true,
         name: Button on SmartDashboard, validators: null, value: true}
     Base: Command
@@ -394,15 +394,15 @@ Children:
       Requires: !!robotbuilder.data.properties.TypeSelectionProperty {default: None,
         name: Requires, type: Subsystem, validators: null, value: Chassis}
       Parameter presets: !!robotbuilder.data.properties.ParameterSetProperty
-        default: &id012
+        default: []
+        name: Parameter presets
+        validators: null
+        value:
         - !!robotbuilder.data.properties.ParameterSet
           name: Right
           parameters:
           - {name: TurnDegrees, type: double, value: '90'}
           - {name: DrivePower, type: double, value: '0.5'}
-        name: Parameter presets
-        validators: null
-        value: *id012
       Button on SmartDashboard: !!robotbuilder.data.properties.BooleanProperty {default: true,
         name: Button on SmartDashboard, validators: null, value: true}
     Base: Command

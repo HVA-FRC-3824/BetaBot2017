@@ -61,14 +61,14 @@ public class ChassisDriveDistance extends Command {
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
 		// Slow down when reaching the desired position
-		if (Math.abs(m_Distance - Robot.chassis.getEncoderDistance()) < 50.0) {
+		if (Math.abs(m_Distance - Robot.chassis.getEncoderDistance()) < 7.0) {
 			Robot.chassis.updateMagnitude(0.5);
 		}
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return false;
+		return Robot.chassis.getEncoderDistance() > m_Distance;
     }
 
     // Called once after isFinished returns true

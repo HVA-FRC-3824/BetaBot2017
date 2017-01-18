@@ -22,6 +22,8 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
+import edu.wpi.first.wpilibj.PIDSource;
+import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -67,7 +69,7 @@ public class Chassis extends Subsystem
 			Constants.DRIVETRAIN_DRIVE_STRAIGHT_P,
             Constants.DRIVETRAIN_DRIVE_STRAIGHT_I, 
             Constants.DRIVETRAIN_DRIVE_STRAIGHT_D, 
-            gyro, new AnglePIDOutput()
+            new GyroPIDSource(), new AnglePIDOutput()
         );
 		
 		// The gyro angle uses input values from 0 to 360
@@ -105,6 +107,7 @@ public class Chassis extends Subsystem
 	{
 		angleGyroPID.disable();
 		angleGyroPID.reset();
+		gyro.reset();
 		Robot.chassis.robotDrive.arcadeDrive(0, 0);
 	}
 	
@@ -270,6 +273,28 @@ public class Chassis extends Subsystem
 			// Drive the robot given the speed and direction
 			// Note: The Arcade drive expects a joystick which is negative forward
 			robotDrive.arcadeDrive(-m_magnitude, PIDoutput, false);
+		}
+	}
+	
+	/**
+	 * Gyro PID source that computes relative angle from gyro
+	 */
+	private class GyroPIDSource implements PIDSource
+	{
+		@Override
+		public double pidGet()
+		{
+			return getRelativeAngle(gyro.getAngle());
+		}
+
+		@Override
+		public void setPIDSourceType(PIDSourceType pidSource) {
+			gyro.setPIDSourceType(pidSource);
+		}
+
+		@Override
+		public PIDSourceType getPIDSourceType() {
+			return gyro.getPIDSourceType();
 		}
 	}
 
