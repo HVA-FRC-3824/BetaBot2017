@@ -12,6 +12,7 @@
 package org.usfirst.frc3824.BetaBot2017.commands;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.usfirst.frc3824.BetaBot2017.Robot;
 
@@ -50,9 +51,7 @@ public class ChassisTurnAngle extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-		double desiredHeading = Robot.chassis.getCurrentHeading() + m_TurnDegrees;
-    
-		Robot.chassis.turnAnglePID(desiredHeading, m_DrivePower);
+		Robot.chassis.turnAnglePID(m_TurnDegrees, m_DrivePower);
 		
 		// Reset and start the on target timer
 		m_OnTargetTimer.reset();

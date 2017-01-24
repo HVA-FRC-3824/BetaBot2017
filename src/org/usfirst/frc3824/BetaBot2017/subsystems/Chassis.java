@@ -150,7 +150,7 @@ public class Chassis extends Subsystem
 			Constants.DRIVETRAIN_DRIVE_MAXIMUM_OUTPUT,
 			Constants.DRIVETRAIN_DRIVE_TOLERANCE,
 			// drive straight means keep current heading
-			getCurrentHeading()
+			0
 		);
 	}
 	
@@ -226,7 +226,7 @@ public class Chassis extends Subsystem
 	 * @param minimumOutput
 	 * @param maximumOutput
 	 * @param tolerance
-	 * @param desiredHeading
+	 * @param desiredHeading (relative to current heading, 0 is keep current heading)
 	 */
 	private void startGyroPID(double P, double I, double D, double minimumOutput, double maximumOutput, double tolerance, double desiredHeading)
 	{
@@ -235,7 +235,10 @@ public class Chassis extends Subsystem
 
 		angleGyroPID.setPID(P, I, D);
 		
-		angleGyroPID.setSetpoint(desiredHeading);
+		// our angleGyroPID works from 0 to 360, make sure target is in that range
+		double target = getRelativeAngle(getCurrentHeading() + desiredHeading);
+		
+		angleGyroPID.setSetpoint(target);
 
 		// Limit the output power when turning
 		angleGyroPID.setOutputRange(minimumOutput, maximumOutput);
