@@ -12,8 +12,8 @@
 package org.usfirst.frc3824.BetaBot2017.commands;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import org.usfirst.frc3824.BetaBot2017.Constants;
 import org.usfirst.frc3824.BetaBot2017.Robot;
 
 /**
@@ -72,8 +72,8 @@ public class ChassisTurnAngle extends Command {
 		if (m_WatchdogTimer.get() > 1.2) {
 			return true;
 		}
-		
-		if (Robot.chassis.gyroPIDOnTarget())
+				
+		if (Robot.chassis.gyroWithin(Constants.TURN_THRESHOLD))
 		{
 			// Ensure hold position for time out time
 			if (m_OnTargetTimer.get() > 0.1) {

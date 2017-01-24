@@ -61,25 +61,12 @@ public class Chassis extends Subsystem
 	private double m_magnitude;
 
 	// PID controller for driving based on Gyro
-	private PIDController angleGyroPID;
-
-	public Chassis() {
-		// Create angleGyroPID
-		angleGyroPID = new PIDController(
-			Constants.DRIVETRAIN_DRIVE_STRAIGHT_P,
-            Constants.DRIVETRAIN_DRIVE_STRAIGHT_I, 
-            Constants.DRIVETRAIN_DRIVE_STRAIGHT_D, 
-            new GyroPIDSource(), new AnglePIDOutput()
-        );
-		
-		// The gyro angle uses input values from 0 to 360
-		angleGyroPID.setInputRange(0, 360);
-		
-		angleGyroPID.setAbsoluteTolerance(Constants.TURN_THRESHOLD);
-				
-		// Consider 0 and 360 to be the same point
-		angleGyroPID.setContinuous(true);
-	}
+	private PIDController angleGyroPID = new PIDController(
+		Constants.DRIVETRAIN_DRIVE_STRAIGHT_P,
+        Constants.DRIVETRAIN_DRIVE_STRAIGHT_I, 
+        Constants.DRIVETRAIN_DRIVE_STRAIGHT_D, 
+        gyro, new AnglePIDOutput()
+    );
 	
 	// Put methods for controlling this subsystem
 	// here. Call these from Commands.
@@ -148,9 +135,8 @@ public class Chassis extends Subsystem
 			Constants.DRIVETRAIN_DRIVE_STRAIGHT_D,
 			Constants.DRIVETRAIN_DRIVE_MINIMUM_OUTPUT,
 			Constants.DRIVETRAIN_DRIVE_MAXIMUM_OUTPUT,
-			Constants.DRIVETRAIN_DRIVE_TOLERANCE,
 			// drive straight means keep current heading
-			0
+			getCurrentHeading()
 		);
 	}
 	
@@ -167,7 +153,6 @@ public class Chassis extends Subsystem
 			Constants.DRIVETRAIN_DRIVE_STRAIGHT_D,
 			Constants.DRIVETRAIN_DRIVE_MINIMUM_OUTPUT,
 			Constants.DRIVETRAIN_DRIVE_MAXIMUM_OUTPUT,
-			Constants.DRIVETRAIN_DRIVE_TOLERANCE,
 			desiredHeading
 		);
 	}
@@ -191,17 +176,16 @@ public class Chassis extends Subsystem
 	 */
 	public double getCurrentHeading()
 	{
-		// Return the relative gyro angle
-		return getRelativeAngle(gyro.getAngle());
+		return gyro.getAngle();
+	}
+	
+	public boolean gyroWithin(double threshold) {
+		return angleGyroPID.getError() < threshold;
 	}
 	
 	public double getEncoderDistance() {
 		// Return the maximum encoder distance in case the other is not working
 		return Math.max(encoderLeft.getDistance(), encoderRight.getDistance());
-	}
-
-	public boolean gyroPIDOnTarget() {
-		return angleGyroPID.onTarget();
 	}
 	
 	/* 
@@ -228,43 +212,21 @@ public class Chassis extends Subsystem
 	 * @param tolerance
 	 * @param desiredHeading (relative to current heading, 0 is keep current heading)
 	 */
-	private void startGyroPID(double P, double I, double D, double minimumOutput, double maximumOutput, double tolerance, double desiredHeading)
+	private void startGyroPID(double P, double I, double D, double minimumOutput, double maximumOutput, double desiredHeading)
 	{
 		// reset other PIDS
 		reset();
 
 		angleGyroPID.setPID(P, I, D);
-		
-		// our angleGyroPID works from 0 to 360, make sure target is in that range
-		double target = getRelativeAngle(getCurrentHeading() + desiredHeading);
-		
-		angleGyroPID.setSetpoint(target);
+				
+		angleGyroPID.setSetpoint(desiredHeading);
 
 		// Limit the output power when turning
 		angleGyroPID.setOutputRange(minimumOutput, maximumOutput);
-
-		angleGyroPID.setAbsoluteTolerance(tolerance);
 		
 		angleGyroPID.enable();
 	}
-	
-	/**
-	 * Method to return a relative gyro angle (between 0 and 360)
-	 */
-	private double getRelativeAngle(double angle)
-	{
-		// Adjust the angle if negative
-		while (angle < 0.0)
-			angle += 360.0;
-
-		// Adjust the angle if greater than 360
-		while (angle >= 360.0)
-			angle -= 360.0;
-
-		// Return the angle between 0 and 360
-		return angle;
-	}
-	
+		
 	/**
 	 * Class declaration for the PIDOutput
 	 */
@@ -278,28 +240,6 @@ public class Chassis extends Subsystem
 			// Drive the robot given the speed and direction
 			// Note: The Arcade drive expects a joystick which is negative forward
 			robotDrive.arcadeDrive(-m_magnitude, PIDoutput, false);
-		}
-	}
-	
-	/**
-	 * Gyro PID source that computes relative angle from gyro
-	 */
-	private class GyroPIDSource implements PIDSource
-	{
-		@Override
-		public double pidGet()
-		{
-			return getRelativeAngle(gyro.getAngle());
-		}
-
-		@Override
-		public void setPIDSourceType(PIDSourceType pidSource) {
-			gyro.setPIDSourceType(pidSource);
-		}
-
-		@Override
-		public PIDSourceType getPIDSourceType() {
-			return gyro.getPIDSourceType();
 		}
 	}
 
