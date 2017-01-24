@@ -108,6 +108,8 @@ public class Chassis extends Subsystem
 		angleGyroPID.disable();
 		angleGyroPID.reset();
 		gyro.reset();
+		encoderLeft.reset();
+		encoderRight.reset();
 		Robot.chassis.robotDrive.arcadeDrive(0, 0);
 	}
 	
