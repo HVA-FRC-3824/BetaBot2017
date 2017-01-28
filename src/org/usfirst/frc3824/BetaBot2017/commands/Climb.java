@@ -46,7 +46,14 @@ public class Climb extends Command
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute()
 	{
-		Robot.climber.climbControl(Robot.oi.climbJoystick.getY());
+		double power = Robot.oi.climbJoystick.getY();
+		
+		// Only allow the climber motor to go one direction
+		if (power > 0.0)
+			power = 0.0;
+		
+		// Set the climber motor
+		Robot.climber.climbControl(power);
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
